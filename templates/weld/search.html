@@ -1,0 +1,155 @@
+{% extends "base.html" %} {% block content %} {% load static %}
+<h1>데이터 검색</h1>
+
+<!-- 검색 폼 -->
+<form method="GET" class="searchForm" onsubmit="return convertDateFields();">
+    <label for="search_type">Search by:</label>
+    <select id="search_type" name="search_type" onchange="changeDateFields()">
+        <option value="individual" {% if request.GET.search_type == 'individual' %}selected{% endif %}>개별</option>  
+        <option value="hourly" {% if request.GET.search_type == 'hourly' %}selected{% endif %}>시간별</option>
+        <option value="daily" {% if request.GET.search_type == 'daily' %}selected{% endif %}>일별</option>
+        <option value="monthly" {% if request.GET.search_type == 'monthly' %}selected{% endif %}>월별</option>
+        <option value="yearly" {% if request.GET.search_type == 'yearly' %}selected{% endif %}>연별</option>
+    </select>
+
+    <label for="start_date">Start Date:</label>
+    <input type="datetime-local" id="start_date" name="start_date" value="{{ request.GET.start_date }}">
+
+    <label for="end_date">End Date:</label>
+    <input type="datetime-local" id="end_date" name="end_date" value="{{ request.GET.end_date }}">
+
+    <label for="model_name">Model Name:</label>
+    <input type="text" id="model_name" name="model_name" value="{{ request.GET.model_name }}">
+
+    <button type="submit">Search</button>
+</form>
+
+<form method="GET" action="{% url 'weld:download_excel' %}" class="downloadForm">
+    <input type="hidden" name="search_type" value="{{ request.GET.search_type }}">
+    <input type="hidden" name="start_date" value="{{ request.GET.start_date }}">
+    <input type="hidden" name="end_date" value="{{ request.GET.end_date }}">
+    <input type="hidden" name="model_name" value="{{ request.GET.model_name }}">
+    <button type="submit">엑셀 다운로드</button>
+</form>
+
+<!-- 데이터 리스트 -->
+<table class='search_table'>
+    <thead>
+        <tr>
+            <th>No.</th>
+            <th>Date</th>
+            <th>Model Name</th>
+            <th>Result</th>
+            <th>Power</th>
+            <th>Frequency</th>
+            <th>Length</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for data in page_obj %}
+        <tr>
+            <td>{{ forloop.counter|add:page_obj.start_index|add:-1 }}</td> <!-- 페이지 번호에 맞게 계산 -->
+            <td>{{ data.date }}</td>
+            <td>{{ data.model_name }}</td>
+            <td>{{ data.result }}</td>
+            <td>{{ data.power }}</td>
+            <td>{{ data.freq }}</td>
+            <td>{{ data.length }}</td>
+        </tr>
+        {% empty %}
+        <tr>
+            <td colspan="7">No data found</td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+
+<!-- 페이지네이션 -->
+<div class="pagination">
+    <span class="step-links">
+        {% if page_obj.has_previous %}
+            <a href="?page=1&search_type={{ request.GET.search_type }}&start_date={{ request.GET.start_date }}&end_date={{ request.GET.end_date }}&model_name={{ request.GET.model_name }}">첫 페이지</a>
+            <a href="?page={{ page_obj.previous_page_number }}&search_type={{ request.GET.search_type }}&start_date={{ request.GET.start_date }}&end_date={{ request.GET.end_date }}&model_name={{ request.GET.model_name }}">이전</a>
+        {% endif %}
+
+        <span class="current">
+            Page {{ page_obj.number }} of {{ page_obj.paginator.num_pages }}.
+        </span>
+
+        {% if page_obj.has_next %}
+            <a href="?page={{ page_obj.next_page_number }}&search_type={{ request.GET.search_type }}&start_date={{ request.GET.start_date }}&end_date={{ request.GET.end_date }}&model_name={{ request.GET.model_name }}">다음</a>
+            <a href="?page={{ page_obj.paginator.num_pages }}&search_type={{ request.GET.search_type }}&start_date={{ request.GET.start_date }}&end_date={{ request.GET.end_date }}&model_name={{ request.GET.model_name }}">마지막 페이지</a>
+        {% endif %}
+    </span>
+</div>
+
+{% endblock %}
+{% block script%}
+
+<script>
+    function changeDateFields() {
+        const searchType = document.getElementById('search_type').value;
+        const startDate = document.getElementById('start_date');
+        const endDate = document.getElementById('end_date');
+
+        if (searchType === 'monthly') {
+            // 월별 검색: input type을 month로 변경
+            startDate.type = 'month';
+            endDate.type = 'month';
+        } else if (searchType === 'daily') {
+            // 일별 검색: input type을 date로 변경
+            startDate.type = 'date';
+            endDate.type = 'date';
+        } else if (searchType === 'hourly' || searchType === 'individual') {
+            // 시간별 및 개별 검색: input type을 datetime-local로 변경
+            startDate.type = 'datetime-local';
+            endDate.type = 'datetime-local';
+        }
+    }
+
+
+    function convertDateFields() {
+        const searchType = document.getElementById('search_type').value;
+        const startDateInput = document.getElementById('start_date');
+        const endDateInput = document.getElementById('end_date');
+    
+        if (searchType === 'daily') {
+            const startDate = new Date(startDateInput.value);
+            const endDate = new Date(endDateInput.value);
+            
+            // 유효한 날짜인지 확인
+            if (!isNaN(startDate.getTime()) && !isNaN(endDate.getTime())) {
+                // Start Date 변환
+                startDateInput.value = startDate.toISOString().slice(0, 10) + 'T00:00'; // 'yyyy-MM-ddThh:mm' 형식으로 변환
+                // End Date 변환
+                endDateInput.value = endDate.toISOString().slice(0, 10) + 'T23:59'; // 'yyyy-MM-ddThh:mm' 형식으로 변환
+            } else {
+                alert("유효한 날짜를 입력하세요.");
+                return false; // 변환 실패
+            }
+        } else if (searchType === 'monthly') {
+            const startDate = new Date(startDateInput.value);
+            const endDate = new Date(endDateInput.value);
+            
+            // 유효한 날짜인지 확인
+            if (!isNaN(startDate.getTime()) && !isNaN(endDate.getTime())) {
+                // Start Date 변환
+                startDateInput.value = startDate.toISOString().slice(0, 7) + '-01T00:00'; // 'yyyy-MM-ddThh:mm' 형식으로 변환
+                // End Date 변환
+                endDateInput.value = endDate.toISOString().slice(0, 7) + '-01T23:59'; // 'yyyy-MM-ddThh:mm' 형식으로 변환
+            } else {
+                alert("유효한 날짜를 입력하세요.");
+                return false; // 변환 실패
+            }
+        }
+        
+        return true; // 변환 성공
+    }
+
+    // 페이지가 로드될 때 검색 조건에 따라 필드 형식을 설정
+    window.onload = function() {
+        changeDateFields();
+    };
+</script>
+
+{%endblock%}

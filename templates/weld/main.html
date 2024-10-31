@@ -1,0 +1,180 @@
+{% extends "base.html" %} {% block content %} {% load static %}
+
+<section>
+  <table class="main_table">
+    <tr>
+      <th class="main_table_th">모델번호</th>
+      <th class="main_table_th">모델명</th>
+      <th class="main_table_th">작업상태</th>
+      <th class="main_table_th">장비상태</th>
+    </tr>
+    <tr class="main_table_tr">
+      <td id="model_num" class="main_table_td">
+        {{ latest_raw_data.model_id }}
+      </td>
+      <td id="model_name" class="main_table_td">
+        {{ latest_raw_data.model_name }}
+      </td>
+      <td id="model_status" class="main_table_td">
+        {% if latest_raw_data.result %}합격{%else%}불합격{% endif %}
+      </td>
+      <td id="equip_status" class="main_table_td">Run</td>
+    </tr>
+  </table>
+</section>
+<section class="index_img">
+  <img src="{% static "images/index.png" %}" alt="인덱스" />
+</section>
+<article class="info">
+  <section class="ipg">
+    <div>IPG LightWELD</div>
+    <table class="sub_table">
+      <tr>
+        <td>Program</td>
+        <td>:</td>
+        <td id="ipg_program" class="var">{{ weld_info.program }}</td>
+      </tr>
+      <tr>
+        <td>Index</td>
+        <td>:</td>
+        <td id="ipg_index" class="var">{{ weld_info.id }}</td>
+      </tr>
+      <tr>
+        <td>Power</td>
+        <td>:</td>
+        <td id="ipg_power" class="var">{{ weld_info.power }}</td>
+      </tr>
+      <tr>
+        <td>Wobble Freq</td>
+        <td>:</td>
+        <td id="ipg_freq" class="var">{{ weld_info.freq }}</td>
+      </tr>
+      <tr>
+        <td>Wobble Length</td>
+        <td>:</td>
+        <td id="ipg_length" class="var">{{ weld_info.length }}</td>
+      </tr>
+    </table>
+  </section>
+  <section class="today_assemble">
+    <div>금일 생산량</div>
+    <table class="sub_table">
+      <tr>
+        <td>전체 모델 합격</td>
+        <td>:</td>
+        <td id="total_ok_num" class="var">{{ total_ok_count }}</td>
+      </tr>
+      <tr>
+        <td>전체 모델 불합격</td>
+        <td>:</td>
+        <td id="total_ng_num" class="var">{{ total_ng_count }}</td>
+      </tr>
+      <tr>
+        <td>현재 모델 합격</td>
+        <td>:</td>
+        <td id="cur_ok_num" class="var">{{ current_model_ok_count }}</td>
+      </tr>
+      <tr>
+        <td>현재 모델 불합격</td>
+        <td>:</td>
+        <td id="cur_ng_num" class="var">{{ current_model_ng_count }}</td>
+      </tr>
+    </table>
+  </section>
+  <section class="before_vision">
+    <div>조립비전 결과</div>
+    <table class="sub_table">
+      <tr>
+        <td>작업 수량</td>
+        <td>:</td>
+        <td id="before_v_total_num" class="var">{{ total_before_count }}</td>
+      </tr>
+      <tr>
+        <td>합격 수량</td>
+        <td>:</td>
+        <td id="before_v_ok_num" class="var">{{ before_ok_count }}</td>
+      </tr>
+      <tr>
+        <td>불합격 수량</td>
+        <td>:</td>
+        <td id="before_v_ng_num" class="var">{{ before_ng_count }}</td>
+      </tr>
+    </table>
+  </section>
+  <section class="after_vision">
+    <div>용접비전 결과</div>
+    <table class="sub_table">
+      <tr>
+        <td>작업 수량</td>
+        <td>:</td>
+        <td id="after_v_total_num" class="var">{{ total_after_count }}</td>
+      </tr>
+      <tr>
+        <td>합격 수량</td>
+        <td>:</td>
+        <td id="after_v_ok_num" class="var">{{ after_ok_count }}</td>
+      </tr>
+      <tr>
+        <td>불합격 수량</td>
+        <td>:</td>
+        <td id="after_v_ng_num" class="var">{{ after_ng_count }}</td>
+      </tr>
+    </table>
+  </section>
+</article>
+
+{% endblock %} {% block script %}
+<script type="text/javascript">
+  function updateData() {
+    fetch('/weld/latest_data/')
+      .then((response) => response.json())
+      .then((data) => {
+        // 최신 모델 정보 업데이트 document.getElementById('model_num').innerText =
+        data.latest_raw_data.model_id;
+        document.getElementById('model_name').innerText =
+          data.latest_raw_data.model_name;
+        document.getElementById('model_status').innerText = data.latest_raw_data
+          .result
+          ? '합격'
+          : '불합격';
+
+        // IPG 정보 업데이트
+        document.getElementById('ipg_program').innerText =
+          data.weld_info.program;
+        document.getElementById('ipg_index').innerText = data.weld_info.id;
+        document.getElementById('ipg_power').innerText = data.weld_info.power;
+        document.getElementById('ipg_freq').innerText = data.weld_info.freq;
+        document.getElementById('ipg_length').innerText = data.weld_info.length;
+
+        // 금일생산량 업데이트
+        document.getElementById('total_ok_num').innerText = data.total_ok_count;
+        document.getElementById('total_ng_num').innerText = data.total_ng_count;
+
+        // 현재 모델 생산량 업데이트
+        document.getElementById('cur_ok_num').innerText =
+          data.current_model_ok_count;
+        document.getElementById('cur_ng_num').innerText =
+          data.current_model_ng_count;
+
+        // 조립비전 및 용접비전 업데이트
+        document.getElementById('before_v_total_num').innerText =
+          data.total_before_count;
+        document.getElementById('before_v_ok_num').innerText =
+          data.before_ok_count;
+        document.getElementById('before_v_ng_num').innerText =
+          data.before_ng_count;
+        document.getElementById('after_v_total_num').innerText =
+          data.total_after_count;
+        document.getElementById('after_v_ok_num').innerText =
+          data.after_ok_count;
+        document.getElementById('after_v_ng_num').innerText =
+          data.after_ng_count;
+      })
+      .catch((error) => console.error('Error fetching data:', error));
+  }
+
+  setInterval(() => {
+    updateData();
+  }, 1000);
+</script>
+{%endblock%}

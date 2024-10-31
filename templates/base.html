@@ -1,0 +1,32 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Weld Monitor</title>
+
+    <link rel="stylesheet" href="{% static 'css/style.css' %} ?after" />
+    <script src="{% static "js/main.js" %}" defer></script>
+  </head>
+  <body>
+    <nav>
+      <ul>
+        <li><a href="{% url 'weld:index' %}">메인화면</a></li>
+        <li><a href="{% url 'weld:weld_list' %}">기본 데이터</a></li>
+        <li><a href="{% url 'weld:search' %}">데이터 검색</a></li>
+        <li><a href="#">옵션</a></li>
+      </ul>
+    </nav>
+    {% block content %} {% endblock %}
+    {% block script %} {% endblock %}
+    <footer>
+      <div class="footer">
+        <span>PLC 통신상태 : </span>
+        <span id="plc_com">통신 정상</span>
+        <span class='date'>현재시간: </span>
+        <span class="date" id="now_time">00:00:00 00:00:00</span>
+      </div>
+    </footer>
+  </body>
+</html>

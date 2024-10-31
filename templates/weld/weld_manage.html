@@ -1,0 +1,86 @@
+<!-- weld_manage.html -->
+{% extends "base.html" %} {% block content %}
+<h1>용접기 설정 관리</h1>
+
+<form method="post" class="styled-form">
+  {% csrf_token %}
+  <div class="form-group">
+    <label for="model_name">모델명:</label>
+    {{ form.model_name }}
+  </div>
+  <div class="form-group">
+    <label for="program">프로그램명:</label>
+    {{ form.program }}
+  </div>
+  <div class="form-group">
+    <label for="power">Power:</label>
+    {{ form.power }}
+  </div>
+  <div class="form-group">
+    <label for="freq">Freq:</label>
+    {{ form.freq }}
+  </div>
+  <div class="form-group">
+    <label for="length">Length:</label>
+    {{ form.length }}
+  </div>
+  <button type="submit" name="action" value="register">등록</button>
+</form>
+
+<h2>등록된 모델 목록</h2>
+<table class="weld_table">
+  <tr>
+    <th>No.</th>
+    <th>모델명</th>
+    <th>프로그램명</th>
+    <th>용접기 Power</th>
+    <th>용접기 Freq.</th>
+    <th>용접기 Wobble Length</th>
+    <th>작업</th>
+  </tr>
+  {% for data in weld_info %}
+  <tr>
+    <td>{{ data.id }}</td>
+    <td>{{ data.model_name }}</td>
+    <td>{{ data.program }}</td>
+    <td>{{ data.power }}</td>
+    <td>{{ data.freq }}</td>
+    <td>{{ data.length }}</td>
+    <td>
+      <button onclick="confirmDelete({{ data.id }})">삭제</button>
+    </td>
+  </tr>
+  {% endfor %}
+</table>
+
+<script>
+  function confirmDelete(id) {
+    if (confirm('이 모델을 삭제하시겠습니까?')) {
+      const form = document.createElement('form');
+      form.method = 'POST';
+      form.action = ''; // 현재 페이지에 POST 요청
+      const csrfInput = document.createElement('input');
+      csrfInput.type = 'hidden';
+      csrfInput.name = 'csrfmiddlewaretoken';
+      csrfInput.value = '{{ csrf_token }}'; // CSRF 토큰 추가
+      form.appendChild(csrfInput);
+
+      const idInput = document.createElement('input');
+      idInput.type = 'hidden';
+      idInput.name = 'action';
+      idInput.value = 'delete'; // 삭제 액션
+      form.appendChild(idInput);
+
+      const pkInput = document.createElement('input');
+      pkInput.type = 'hidden';
+      pkInput.name = 'id';
+      pkInput.value = id; // 삭제할 모델 ID
+      form.appendChild(pkInput);
+
+      document.body.appendChild(form);
+      form.submit(); // 폼 전송
+    }
+  }
+</script>
+
+{% endblock %}

@@ -1,0 +1,414 @@
+* {
+  padding: 0;
+  margin: 0;
+  text-decoration: none;
+  list-style: none;
+}
+html {
+  font-family: 'Nanum Gothic';
+}
+nav {
+  border: 1px solid black;
+  background-color: rgb(255, 255, 152);
+  padding: 10px;
+  box-shadow: 0 4px 2px -2px gray;
+  width: 100%;
+  height: 45px;
+}
+
+nav ul {
+  display: flex;
+  justify-content: space-around;
+  align-items: center;
+}
+nav li {
+  display: inline-block;
+  margin: 0;
+  line-height: 40px;
+}
+nav a {
+  color: black;
+  font-size: 16px;
+  padding: 0px 20px;
+  font-weight: 900;
+  transition: background-color 0.5s ease;
+}
+
+nav a:hover {
+  background-color: #d6c808;
+  border-radius: 5px;
+}
+
+.main_table,
+.weld_table,
+.search_table {
+  width: 70%;
+  margin: 20px auto;
+  border-collapse: collapse;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+}
+
+/* .main_table {
+  border-collapse: collapse;
+  width: 70%;
+  margin-left: auto;
+  margin-right: auto;
+  margin-top: 10px;
+} */
+
+.main_table th,
+.weld_table th,
+.search_table th {
+  background-color: #f2f2f2;
+  color: #333;
+  padding: 5px;
+  text-align: center;
+}
+
+.main_table td,
+.weld_table td,
+.search_table td {
+  padding: 5px;
+  text-align: center;
+  background-color: #fff;
+  border-bottom: 1px solid #ddd;
+  transition: background-color 0.2s ease;
+}
+.main_table tr:hover,
+.weld_table tr:hover,
+.search_table tr:hover {
+  background-color: #f1f1f1;
+}
+/* 
+.main_table td {
+  border: 1px solid black;
+  text-align: center;
+  height: 20px;
+}
+
+.main_table td {
+  color: blue;
+  font-weight: 500;
+} */
+
+#model_name {
+  width: 40%;
+}
+
+img {
+  width: 650px;
+  /* border: 1px solid; */
+  margin-left: 237px;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+}
+
+.index_img {
+  margin-top: 10px;
+  margin-left: 50px;
+  display: inline-block;
+}
+
+.info {
+  display: inline-block;
+}
+
+article > section {
+  position: relative;
+  top: 120px;
+  /* border: 1px solid black; */
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+  background-color: rgb(248, 248, 248);
+  height: 310px;
+}
+
+article > section > div {
+  text-decoration: underline;
+}
+
+.ipg {
+  display: inline-block;
+  /* margin-top: 0; */
+  position: absolute;
+  top: 180px;
+  width: 300px;
+  left: 1000px;
+}
+
+.today_assemble {
+  display: inline-block;
+  /* margin-top: 0; */
+  position: absolute;
+  top: 180px;
+  left: 1330px;
+  width: 300px;
+}
+
+.before_vision {
+  display: inline-block;
+  /* margin-top: 0; */
+  position: absolute;
+  top: 510px;
+  left: 1000px;
+  /* right: 70px; */
+  width: 300px;
+}
+
+.after_vision {
+  display: inline-block;
+  /* margin-top: 0; */
+  position: absolute;
+  top: 510px;
+  left: 1330px;
+  width: 300px;
+}
+
+section div {
+  text-align: center;
+  padding: 10px;
+}
+
+.sub_table {
+  margin-left: auto;
+  margin-right: auto;
+  height: 250px;
+}
+
+.sub_table td {
+  padding: 13px 7px;
+}
+
+.var {
+  color: blue;
+}
+
+hr {
+  margin-top: 50px;
+  margin-bottom: 10px;
+}
+
+.footer {
+  background-color: #ddd;
+  border: 1px solid black;
+  padding: 10px 30px;
+}
+
+.weld_com {
+  float: right;
+  margin-right: 500px;
+}
+
+.last_line {
+  margin-top: 10px;
+}
+
+footer {
+  position: fixed;
+  /* top: auto; */
+  bottom: 0;
+  width: 100%;
+}
+
+.date {
+  position: relative;
+  left: 1450px;
+}
+
+/* 기본 데이터 */
+/* 
+.weld_table {
+  border: 1px solid black;
+  border-collapse: collapse;
+  width: 50%;
+  margin-left: auto;
+  margin-right: auto;
+} */
+/* 
+.weld_table td {
+  border: 1px solid black;
+  text-align: center;
+} */
+
+.div_weld_list {
+  margin: 20px 10px;
+  /* display: flex; */
+  text-align: center;
+}
+
+.list_regi {
+  /* justify-content: center; */
+  /* color: black; */
+  /* border: 1px solid black;
+  background-color: #ddd;
+  text-decoration: none;
+  padding: 5px 5px; */
+  background-color: #e2b947;
+  color: white;
+  border: none;
+  padding: 10px 20px;
+  cursor: pointer;
+  border-radius: 5px;
+  transition: background-color 0.3s ease;
+}
+.list_regi:hover {
+  background-color: #dbad2e;
+}
+
+#regi {
+  text-decoration: none;
+  color: white;
+  /* font-size: 15px; */
+}
+
+#regi:visited {
+  text-decoration: none;
+}
+
+/* 데이터 검색 */
+
+h1 {
+  text-align: center;
+  margin: 20px auto;
+}
+
+form {
+  margin: 20px auto;
+  text-align: center;
+}
+
+label {
+  margin-right: 10px;
+}
+
+form input,
+form select,
+form button {
+  padding: 5px;
+  margin-right: 10px;
+}
+/* 
+.search_table {
+  width: 90%;
+  border-collapse: collapse;
+  margin-top: 20px;
+  margin-left: auto;
+  margin-right: auto;
+} */
+/* 
+.search_table th,
+.search_table td {
+  padding: 10px;
+  border: 1px solid #ddd;
+  text-align: center;
+}
+
+.search_table th {
+  background-color: #f4f4f4;
+}
+
+.search_table tr:nth-child(even) {
+  background-color: #f9f9f9;
+} */
+
+button {
+  background-color: #e2b947;
+  color: white;
+  border: none;
+  padding: 10px 20px;
+  cursor: pointer;
+  border-radius: 5px;
+  transition: background-color 0.3s ease;
+}
+button:hover {
+  background-color: #dbad2e;
+}
+
+/* 전체 페이지네이션 컨테이너 정렬 */
+.pagination {
+  display: flex;
+  justify-content: center; /* 중앙 정렬 */
+  margin: 20px 0;
+}
+
+.pagination .step-links {
+  display: flex;
+  align-items: center;
+}
+
+/* 페이지 링크 스타일 */
+.pagination a {
+  color: #007bff; /* 링크 색상 */
+  padding: 8px 16px; /* 여백 */
+  text-decoration: none;
+  border: 1px solid #ddd; /* 경계선 */
+  margin: 0 5px; /* 링크 간격 */
+  border-radius: 4px; /* 둥근 테두리 */
+  transition: background-color 0.3s ease; /* 부드러운 배경색 전환 */
+}
+
+.pagination a:hover {
+  background-color: #f0f0f0; /* 링크에 마우스를 올렸을 때 배경색 */
+  color: #0056b3; /* 링크에 마우스를 올렸을 때 텍스트 색상 */
+}
+
+/* 현재 페이지 표시 */
+.pagination .current {
+  padding: 8px 16px;
+  border: 1px solid #007bff; /* 현재 페이지 테두리 색상 */
+  background-color: #007bff; /* 현재 페이지 배경색 */
+  color: white; /* 현재 페이지 텍스트 색상 */
+  border-radius: 4px;
+  margin: 0 5px;
+}
+
+/* 비활성화된 링크 스타일 */
+.pagination span {
+  padding: 8px 16px;
+  color: #6c757d; /* 비활성화된 텍스트 색상 */
+  /* background-color: #e9ecef; 비활성화된 배경색 */
+  /* border: 1px solid #ddd; 경계선 */
+  border-radius: 4px;
+  margin: 0 5px;
+}
+
+.styled-form {
+  max-width: 600px;
+  margin: 0 auto;
+  padding: 20px;
+  background-color: #f9f9f9;
+  border-radius: 8px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+.styled-form .form-group {
+  margin-bottom: 15px;
+}
+
+.styled-form label {
+  font-weight: bold;
+  display: block;
+  margin-bottom: 5px;
+}
+
+.styled-form input,
+.styled-form select {
+  width: 100%;
+  padding: 8px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  box-sizing: border-box;
+}
+
+.styled-form button.btn {
+  display: inline-block;
+  background-color: #28a745;
+  color: white;
+  padding: 10px 20px;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  text-align: center;
+}
+
+.styled-form button.btn:hover {
+  background-color: #218838;
+}

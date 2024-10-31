@@ -1,0 +1,30 @@
+{% extends "base.html" %} {% block content %} {% load static %}
+<h1>용접기 설정 리스트</h1>
+
+<table class="weld_table">
+  <tr>
+    <th>No.</th>
+    <th>모델명</th>
+    <th>프로그램명</th>
+    <th>용접기 Power</th>
+    <th>용접기 Freq.</th>
+    <th>용접기 Wobble Length</th>
+  </tr>
+  {% for data in weld_info %}
+  <tr>
+    <td>{{ data.id }}</td>
+    <td>{{ data.model_name }}</td>
+    <td>{{ data.program }}</td>
+    <td>{{ data.power }}</td>
+    <td>{{ data.freq }}</td>
+    <td>{{ data.length }}</td>
+  </tr>
+  {% endfor %}
+</table>
+<div class="div_weld_list">
+  <span class="list_regi">
+    <a id="regi" href="{% url 'weld:weld_manage' %}">등록/삭제</a>
+  </span>
+</div>
+
+{% endblock %}
