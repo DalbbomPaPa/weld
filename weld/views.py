@@ -168,6 +168,8 @@ def weld_manage(request):
 from datetime import datetime
 from django.db.models import Count, Q
 from django.core.paginator import Paginator
+from django.db.models import Case, When, IntegerField, Sum
+
 
 def search_data(request):
     # GET 요청에서 날짜, 모델 이름, 그리고 검색 조건 가져오기
@@ -196,7 +198,8 @@ def search_data(request):
             # 일별로 OK, NG 합산 결과 계산
             raw_datas = raw_datas.values('date__date', 'model_name').annotate(
                 ok_count=Count('id', filter=Q(result=True)),
-                ng_count=Count('id', filter=Q(result=False))
+                ng_count=Count('id', filter=Q(result=False)),
+                total = Count('id')
             )
 
         elif search_type == "monthly":
@@ -204,12 +207,13 @@ def search_data(request):
             start_date = datetime.strptime(start_date, '%Y-%m')
             end_date = datetime.strptime(end_date, '%Y-%m')
             raw_datas = raw_datas.filter(date__year__gte=start_date.year, date__year__lte=end_date.year,
-                                         date__month__gte=start_date.month, date__month__lte=end_date.month)
+                                        date__month__gte=start_date.month, date__month__lte=end_date.month)
 
             # 월별로 OK, NG 합산 결과 계산
             raw_datas = raw_datas.values('date__year', 'date__month', 'model_name').annotate(
                 ok_count=Count('id', filter=Q(result=True)),
-                ng_count=Count('id', filter=Q(result=False))
+                ng_count=Count('id', filter=Q(result=False)),
+                total = Count('id')
             )
 
         elif search_type == "yearly":
@@ -221,7 +225,8 @@ def search_data(request):
             # 년별로 OK, NG 합산 결과 계산
             raw_datas = raw_datas.values('date__year', 'model_name').annotate(
                 ok_count=Count('id', filter=Q(result=True)),
-                ng_count=Count('id', filter=Q(result=False))
+                ng_count=Count('id', filter=Q(result=False)),
+                total = Count('id')
             )
 
     # 모델 이름으로 필터링 (입력된 모델 이름이 있을 경우)

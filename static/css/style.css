@@ -42,7 +42,7 @@ nav a:hover {
 .main_table,
 .weld_table,
 .search_table {
-  width: 70%;
+  width: 85%;
   margin: 20px auto;
   border-collapse: collapse;
   box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
@@ -96,9 +96,9 @@ nav a:hover {
 }
 
 img {
-  width: 650px;
+  width: 600px;
   /* border: 1px solid; */
-  margin-left: 237px;
+  margin-left: 20px;
   box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
 }
 
@@ -118,7 +118,7 @@ article > section {
   /* border: 1px solid black; */
   box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
   background-color: rgb(248, 248, 248);
-  height: 310px;
+  height: 280px;
 }
 
 article > section > div {
@@ -129,37 +129,37 @@ article > section > div {
   display: inline-block;
   /* margin-top: 0; */
   position: absolute;
-  top: 180px;
-  width: 300px;
-  left: 1000px;
+  top: 185px;
+  width: 250px;
+  left: 700px;
 }
 
 .today_assemble {
   display: inline-block;
   /* margin-top: 0; */
   position: absolute;
-  top: 180px;
-  left: 1330px;
-  width: 300px;
+  top: 185px;
+  left: 960px;
+  width: 250px;
 }
 
 .before_vision {
   display: inline-block;
   /* margin-top: 0; */
   position: absolute;
-  top: 510px;
-  left: 1000px;
+  top: 485px;
+  left: 700px;
   /* right: 70px; */
-  width: 300px;
+  width: 250px;
 }
 
 .after_vision {
   display: inline-block;
   /* margin-top: 0; */
   position: absolute;
-  top: 510px;
-  left: 1330px;
-  width: 300px;
+  top: 485px;
+  left: 960px;
+  width: 250px;
 }
 
 section div {
@@ -170,7 +170,7 @@ section div {
 .sub_table {
   margin-left: auto;
   margin-right: auto;
-  height: 250px;
+  height: 200px;
 }
 
 .sub_table td {
@@ -210,7 +210,7 @@ footer {
 
 .date {
   position: relative;
-  left: 1450px;
+  left: 820px;
 }
 
 /* 기본 데이터 */

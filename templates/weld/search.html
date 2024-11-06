@@ -2,7 +2,7 @@
 <h1>데이터 검색</h1>
 
 <!-- 검색 폼 -->
-<form method="GET" class="searchForm" onsubmit="return convertDateFields();">
+<form method="GET" class="searchForm">
     <label for="search_type">Search by:</label>
     <select id="search_type" name="search_type" onchange="changeDateFields()">
         <option value="individual" {% if request.GET.search_type == 'individual' %}selected{% endif %}>개별</option>  
@@ -33,7 +33,7 @@
 </form>
 
 <!-- 데이터 리스트 -->
-<table class='search_table'>
+{% comment %} <table class='search_table'>
     <thead>
         <tr>
             <th>No.</th>
@@ -55,6 +55,89 @@
             <td>{{ data.power }}</td>
             <td>{{ data.freq }}</td>
             <td>{{ data.length }}</td>
+        </tr>
+        {% empty %}
+        <tr>
+            <td colspan="7">No data found</td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table> {% endcomment %}
+
+<table class="search_table">
+    <thead>
+        <tr>
+            <th>No.</th>
+            {% if search_type == 'individual' or search_type == 'hourly' %}
+                <th>Date</th>
+                <th>Model Name</th>
+                <th>Result</th>
+                <th>Power</th>
+                <th>Frequency</th>
+                <th>Length</th>
+            {% elif search_type == 'daily' %}
+                <th>Date</th>
+                <th>Model Name</th>
+                <th>OK Count</th>
+                <th>NG Count</th>
+                <th>Total</th>
+            {% elif search_type == 'monthly' %}
+                <th>Year</th>
+                <th>Month</th>
+                <th>Model Name</th>
+                <th>OK Count</th>
+                <th>NG Count</th>
+                <th>Total</th>
+            {% elif search_type == 'yearly' %}
+                <th>Year</th>
+                <th>Model Name</th>
+                <th>OK Count</th>
+                <th>NG Count</th>
+                <th>Total</th>
+            {% endif %}
+        </tr>
+    </thead>
+    <tbody>
+        {% for data in page_obj %}
+        <tr>
+            <td>{{ forloop.counter|add:page_obj.start_index|add:-1 }}</td>
+            {% if search_type == 'individual' or search_type == 'hourly' %}
+                <td>{{ data.date }}</td>
+                <td>{{ data.model_name }}</td>
+                <td>
+                    {% if search_type in "individual hourly" %}
+                        {% if data.result%}
+                            OK
+                        {% else %}
+                        NG
+                        {%endif%}
+                    {% else %}
+                        {{data.result}}
+                    {% endif %}
+                    </td>
+                <td>{{ data.power }}</td>
+                <td>{{ data.freq }}</td>
+                <td>{{ data.length }}</td>
+            {% elif search_type == 'daily' %}
+                <td>{{ data.date__date }}</td>
+                <td>{{ data.model_name }}</td>
+                <td>{{ data.ok_count }}</td>
+                <td>{{ data.ng_count }}</td>
+                <td>{{ data.total }}</td>
+            {% elif search_type == 'monthly' %}
+                <td>{{ data.date__year }}</td>
+                <td>{{ data.date__month }}</td>
+                <td>{{ data.model_name }}</td>
+                <td>{{ data.ok_count }}</td>
+                <td>{{ data.ng_count }}</td>
+                <td>{{ data.total }}</td>
+            {% elif search_type == 'yearly' %}
+                <td>{{ data.date__year }}</td>
+                <td>{{ data.model_name }}</td>
+                <td>{{ data.ok_count }}</td>
+                <td>{{ data.ng_count }}</td>
+                <td>{{ data.total }}</td>
+            {% endif %}
         </tr>
         {% empty %}
         <tr>

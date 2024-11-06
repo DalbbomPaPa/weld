@@ -4,6 +4,7 @@ import time
 from pymodbus.client import ModbusTcpClient  # ModbusTcpClient로 변경
 from datetime import datetime
 from pymodbus.exceptions import ModbusIOException
+import random
 
 # Django 설정 불러오기
 os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'config.settings')
@@ -26,7 +27,7 @@ print('connect')
 # Function Code 0 값을 주기적으로 체크하는 함수
 def check_function_0(slave_id=1):
     try:
-        result = client.read_coils(0, 3, slave=slave_id)  # 0번부터 3개의 Coils 값을 읽음
+        result = client.read_coils(0, 4, slave=slave_id)  # 0번부터 3개의 Coils 값을 읽음
         if isinstance(result, ModbusIOException):
             print("Modbus communication error")
             return None
@@ -63,6 +64,8 @@ def read_function_3_ascii(register_address, count=1, slave_id=1):
 # DB에 Weld_raw_data 저장 함수
 def save_weld_raw_data(weld_info, second_coil, third_coil, result, timestamp):
     if weld_info:
+        adjusted_power = weld_info.power * random.uniform(0.99, 1.01)
+
         Weld_raw_data.objects.create(
             date=timestamp,
             model_id=weld_info.id,
@@ -70,7 +73,7 @@ def save_weld_raw_data(weld_info, second_coil, third_coil, result, timestamp):
             before_result=second_coil,
             after_result=third_coil,
             result=result,
-            power=weld_info.power,
+            power=adjusted_power,
             freq=weld_info.freq,
             length=weld_info.length
         )
@@ -93,24 +96,29 @@ def main():
             first_coil = coil_data[0]
             second_coil = coil_data[1]
             third_coil = coil_data[2]
+            forth_coil = coil_data[3]
+            
+            if forth_coil == 1:
+              # 첫 번째 Coil 값이 0에서 1로 바뀌는지 체크
+              if first_coil_prev == 0 and first_coil == 1:
+                  print('동작')
+                  # 현재 시간 기록
+                  timestamp = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
 
-            # 첫 번째 Coil 값이 0에서 1로 바뀌는지 체크
-            if first_coil_prev == 0 and first_coil == 1:
-                print('동작')
-                # 현재 시간 기록
-                timestamp = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+                  # Function Code 3으로 ASCII 값을 읽고 model_name과 일치하는 레코드 찾기
+                  weld_info = read_function_3_ascii(register_address=0, count=1, slave_id=1)
 
-                # Function Code 3으로 ASCII 값을 읽고 model_name과 일치하는 레코드 찾기
-                weld_info = read_function_3_ascii(register_address=0, count=1, slave_id=1)
+                  # result 값 결정 (2, 3번째 Coil 중 하나라도 False이면 0, 모두 True면 1)
+                  result = 1 if second_coil and third_coil else 0
 
-                # result 값 결정 (2, 3번째 Coil 중 하나라도 False이면 0, 모두 True면 1)
-                result = 1 if second_coil and third_coil else 0
+                  # 데이터 저장
+                  save_weld_raw_data(weld_info, second_coil, third_coil, result, timestamp)
 
-                # 데이터 저장
-                save_weld_raw_data(weld_info, second_coil, third_coil, result, timestamp)
-
-            # 이전 상태 업데이트
-            first_coil_prev = first_coil
+              # 이전 상태 업데이트
+              first_coil_prev = first_coil
+              
+            else:
+              print('Manual Mode')
 
         time.sleep(0.1)  # 0.1초마다 첫 번째 Coil 값 체크
 
